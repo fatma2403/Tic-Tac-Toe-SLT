@@ -2,7 +2,7 @@ name: Java CI/CD with Maven
 
 on:
   push:
-    branches: [ "main" ]   # only run on main
+    branches: [ "main" ]
   pull_request:
 
 jobs:
@@ -19,25 +19,39 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # Generate version number (1.0.<run_number>)
       - name: Generate version
         id: get_version
         run: |
           VERSION="1.0.${GITHUB_RUN_NUMBER}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      # Run tests (always, for PRs & pushes)
+      - name: Run tests
+        run: mvn -B test -Drevision=${{ steps.get_version.outputs.version }}
+
+      # Build package
       - name: Build with Maven
         run: mvn -B package -Drevision=${{ steps.get_version.outputs.version }} --file pom.xml
 
-      - name: Run tests
-        run: mvn test -Drevision=${{ steps.get_version.outputs.version }}
-
+      # Upload artifact (always available in Actions UI)
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: TicTacToe-jar
           path: target/tic-tac-toe-${{ steps.get_version.outputs.version }}-shaded.jar
 
+      # Only on main (not PRs): create Git tag + GitHub Release
+      - name: Create Git tag
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag v${{ steps.get_version.outputs.version }}
+          git push origin v${{ steps.get_version.outputs.version }}
+
       - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
