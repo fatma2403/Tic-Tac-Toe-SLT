@@ -23,11 +23,16 @@ jobs:
         run: mvn -B test --file pom.xml
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B clean package --file pom.xml
 
       - name: Rename JAR
         run: |
-          FILE=$(ls target/*-shaded.jar | head -n 1)
+          FILE=$(ls target/*-shaded.jar 2>/dev/null || true)
+          if [ -z "$FILE" ]; then
+            echo "⚠️ Kein shaded JAR gefunden, benutze normales JAR."
+            FILE=$(ls target/*.jar | grep -v original | head -n 1)
+          fi
+          echo "➡️ Benutze $FILE"
           cp "$FILE" target/tic-tac-toe-latest.jar
 
       - name: Upload JAR artifact

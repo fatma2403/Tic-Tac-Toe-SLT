@@ -10,14 +10,12 @@
     <name>Tic-Tac-Toe</name>
 
     <properties>
-        <!-- use the JDK you actually have installed -->
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
     </properties>
 
-    <!-- ✅ dependencies must be inside this wrapper -->
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
