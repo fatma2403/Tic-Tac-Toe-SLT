@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Tic-Tav-Toe" />
+        <module name="Tic-Tac-Toe" />
       </profile>
     </annotationProcessing>
   </component>
