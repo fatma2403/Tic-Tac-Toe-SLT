@@ -10,6 +10,9 @@ public class Board {
             Arrays.fill(chars, ' ');
         }
     }
+    public char[][] getBoard() {
+        return board;
+    }
     public boolean isCellEmpty(int x, int y){
         return board[x][y] == ' ';
     }
